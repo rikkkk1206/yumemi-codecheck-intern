@@ -13,9 +13,9 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
     
     var repositories: [[String: Any]] = []
     var searchingRepositoryTask: URLSessionTask?
-    var searchWord: String!
-    var searchUrlString: String!
-    var currentIndex: Int!
+    var searchWord: String = ""
+    var searchUrlString: String = ""
+    var currentIndex: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,31 +35,32 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchWord = searchBar.text!
+        searchWord = searchBar.text ?? ""
         // 検索ワードが0の場合は何もしない
         if searchWord.count == 0 {
             return
         }
         
-        searchUrlString = "https://api.github.com/search/repositories?q=\(searchWord!)"
-        // GitHubにアクセスするタスクを生成
-        searchingRepositoryTask = URLSession.shared.dataTask(with: URL(string: searchUrlString)!) { (data, res, err) in
-            if let object = try! JSONSerialization.jsonObject(with: data!) as? [String: Any],
-               let items = object["items"] as? [[String: Any]] {
-                // 検索結果から該当するリポジトリを取得
-                self.repositories = items
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
+        searchUrlString = "https://api.github.com/search/repositories?q=\(searchWord)"
+        if let url = URL(string: searchUrlString) {
+            // GitHubにアクセスするタスクを生成
+            searchingRepositoryTask = URLSession.shared.dataTask(with: url) { (data, res, err) in
+                if let data = data, let object = try! JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let items = object["items"] as? [[String: Any]] {
+                    // 検索結果から該当するリポジトリを取得
+                    self.repositories = items
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
                 }
             }
+            // これ呼ばなきゃリストが更新されません
+            searchingRepositoryTask?.resume()
         }
-        // これ呼ばなきゃリストが更新されません
-        searchingRepositoryTask?.resume()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "Detail"{
-            let repositoryDetailViewController = segue.destination as! RepositoryDetailViewController
+        if segue.identifier == "Detail", let repositoryDetailViewController = segue.destination as? RepositoryDetailViewController {
             repositoryDetailViewController.searchRepositoryViewController = self
         }
     }
