@@ -9,11 +9,9 @@
 import UIKit
 
 class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate {
-
     @IBOutlet weak var searchBar: UISearchBar!
     
-    var repositories: [[String: Any]]=[]
-    
+    var repositories: [[String: Any]] = []
     var searchingRepositoryTask: URLSessionTask?
     var searchWord: String!
     var searchUrlString: String!
@@ -37,7 +35,6 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
         searchWord = searchBar.text!
         // 検索ワードが0の場合は何もしない
         if searchWord.count == 0 {
@@ -58,16 +55,13 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
         }
         // これ呼ばなきゃリストが更新されません
         searchingRepositoryTask?.resume()
-        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
         if segue.identifier == "Detail"{
             let repositoryDetailViewController = segue.destination as! RepositoryDetailViewController
             repositoryDetailViewController.searchRepositoryViewController = self
         }
-        
     }
     
     // MARK: TableView Delegate
@@ -76,20 +70,16 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = UITableViewCell()
         let repository = repositories[indexPath.row]
         cell.textLabel?.text = repository["full_name"] as? String ?? ""
         cell.detailTextLabel?.text = repository["language"] as? String ?? ""
         cell.tag = indexPath.row
         return cell
-        
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         currentIndex = indexPath.row
         performSegue(withIdentifier: "Detail", sender: self)
-        
     }
-    
 }

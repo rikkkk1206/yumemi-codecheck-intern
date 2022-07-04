@@ -9,7 +9,6 @@
 import UIKit
 
 class RepositoryDetailViewController: UIViewController {
-    
     @IBOutlet weak var ownerIconImageView: UIImageView!
     
     @IBOutlet weak var repositoryNameLabel: UILabel!
@@ -34,11 +33,9 @@ class RepositoryDetailViewController: UIViewController {
         forksLabel.text = "\(repository["forks_count"] as? Int ?? 0) forks"
         issuesLabel.text = "\(repository["open_issues_count"] as? Int ?? 0) open issues"
         getOwnerIconImage()
-        
     }
     
     func getOwnerIconImage() {
-        
         let repository = searchRepositoryViewController.repositories[searchRepositoryViewController.currentIndex]
         
         repositoryNameLabel.text = repository["full_name"] as? String
@@ -52,7 +49,5 @@ class RepositoryDetailViewController: UIViewController {
                 }
             }.resume()
         }
-        
     }
-    
 }
