@@ -37,21 +37,20 @@ class RepositoryDetailViewController: UIViewController {
         
     }
     
-    func getOwnerIconImage(){
+    func getOwnerIconImage() {
         
         let repository = searchRepositoryViewController.repositories[searchRepositoryViewController.currentIndex]
         
         repositoryNameLabel.text = repository["full_name"] as? String
         
-        if let owner = repository["owner"] as? [String: Any] {
-            if let avatarUrl = owner["avatar_url"] as? String {
-                URLSession.shared.dataTask(with: URL(string: avatarUrl)!) { (data, res, err) in
-                    let ownerIcon = UIImage(data: data!)!
-                    DispatchQueue.main.async {
-                        self.ownerIconImageView.image = ownerIcon
-                    }
-                }.resume()
-            }
+        if let owner = repository["owner"] as? [String: Any],
+           let avatarUrl = owner["avatar_url"] as? String {
+            URLSession.shared.dataTask(with: URL(string: avatarUrl)!) { (data, res, err) in
+                let ownerIcon = UIImage(data: data!)!
+                DispatchQueue.main.async {
+                    self.ownerIconImageView.image = ownerIcon
+                }
+            }.resume()
         }
         
     }
