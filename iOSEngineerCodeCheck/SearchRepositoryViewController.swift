@@ -45,13 +45,23 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
         if let url = URL(string: searchUrlString) {
             // GitHubにアクセスするタスクを生成
             searchingRepositoryTask = URLSession.shared.dataTask(with: url) { (data, res, err) in
-                if let data = data, let object = try! JSONSerialization.jsonObject(with: data) as? [String: Any],
-                   let items = object["items"] as? [[String: Any]] {
-                    // 検索結果から該当するリポジトリを取得
-                    self.repositories = items
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
+                if let data = data {
+                    do {
+                        let object = try JSONSerialization.jsonObject(with: data)
+                        if let object = object as? [String: Any],
+                           let items = object["items"] as? [[String: Any]] {
+                            // 検索結果から該当するリポジトリを取得
+                            self.repositories = items
+                            DispatchQueue.main.async {
+                                self.tableView.reloadData()
+                            }
+                        }
+                    } catch {
+                        print("ERROR get JSON object: \(error)")
                     }
+                }
+                if let err = err {
+                    print("ERROR create a task to access GitHub: \(err)")
                 }
             }
             // これ呼ばなきゃリストが更新されません

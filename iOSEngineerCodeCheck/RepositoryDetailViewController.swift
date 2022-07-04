@@ -49,6 +49,9 @@ class RepositoryDetailViewController: UIViewController {
                         self.ownerIconImageView.image = ownerIcon
                     }
                 }
+                if let err = err {
+                    print("ERROR create a task to retrieve the owner icon: \(err)")
+                }
             }.resume()
         }
     }
