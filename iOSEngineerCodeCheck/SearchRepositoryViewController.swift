@@ -39,14 +39,17 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
         searchWord = searchBar.text!
+        // 検索ワードが0の場合は何もしない
         if searchWord.count == 0 {
             return
         }
         
         searchUrlString = "https://api.github.com/search/repositories?q=\(searchWord!)"
+        // GitHubにアクセスするタスクを生成
         searchingRepositoryTask = URLSession.shared.dataTask(with: URL(string: searchUrlString)!) { (data, res, err) in
             if let object = try! JSONSerialization.jsonObject(with: data!) as? [String: Any],
                let items = object["items"] as? [[String: Any]] {
+                // 検索結果から該当するリポジトリを取得
                 self.repositories = items
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
@@ -67,6 +70,7 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
         
     }
     
+    // MARK: TableView Delegate
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return repositories.count
     }
@@ -83,7 +87,6 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // 画面遷移時に呼ばれる
         currentIndex = indexPath.row
         performSegue(withIdentifier: "Detail", sender: self)
         
