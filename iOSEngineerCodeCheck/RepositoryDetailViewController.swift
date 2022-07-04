@@ -41,11 +41,16 @@ class RepositoryDetailViewController: UIViewController {
         repositoryNameLabel.text = repository["full_name"] as? String
         
         if let owner = repository["owner"] as? [String: Any],
-           let avatarUrl = owner["avatar_url"] as? String {
-            URLSession.shared.dataTask(with: URL(string: avatarUrl)!) { (data, res, err) in
-                let ownerIcon = UIImage(data: data!)!
-                DispatchQueue.main.async {
-                    self.ownerIconImageView.image = ownerIcon
+           let avatarUrl = owner["avatar_url"] as? String,
+           let url = URL(string: avatarUrl) {
+            URLSession.shared.dataTask(with: url) { (data, res, err) in
+                if let data = data, let ownerIcon = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        self.ownerIconImageView.image = ownerIcon
+                    }
+                }
+                if let err = err {
+                    print("ERROR create a task to retrieve the owner icon: \(err)")
                 }
             }.resume()
         }
