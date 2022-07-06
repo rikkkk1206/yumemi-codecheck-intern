@@ -57,11 +57,11 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
                             }
                         }
                     } catch {
-                        print("ERROR get JSON object: \(error)")
+                        fatalError("ERROR get JSON object: \(error)")
                     }
                 }
                 if let err = err {
-                    print("ERROR create a task to access GitHub: \(err)")
+                    fatalError("ERROR create a task to access GitHub: \(err)")
                 }
             }
             // これ呼ばなきゃリストが更新されません
