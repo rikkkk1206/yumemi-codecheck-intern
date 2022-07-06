@@ -20,7 +20,7 @@ class RepositoryDetailViewController: UIViewController {
     @IBOutlet weak var forksLabel: UILabel!
     @IBOutlet weak var issuesLabel: UILabel!
     
-    var searchRepositoryViewController: SearchRepositoryViewController!
+    weak var searchRepositoryViewController: SearchRepositoryViewController!    // 循環参照を防ぐために弱参照する
         
     override func viewDidLoad() {
         super.viewDidLoad()
