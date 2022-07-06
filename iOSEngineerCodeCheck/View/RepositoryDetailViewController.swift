@@ -27,22 +27,22 @@ class RepositoryDetailViewController: UIViewController {
         
         let repository = searchRepositoryViewController.repositories[searchRepositoryViewController.currentIndex]
         
-        languageLabel.text = "Written in \(repository["language"] as? String ?? "")"
-        starsLabel.text = "\(repository["stargazers_count"] as? Int ?? 0) stars"
-        watchersLabel.text = "\(repository["wachers_count"] as? Int ?? 0) watchers"
-        forksLabel.text = "\(repository["forks_count"] as? Int ?? 0) forks"
-        issuesLabel.text = "\(repository["open_issues_count"] as? Int ?? 0) open issues"
+        languageLabel.text = "Written in \(repository.language)"
+        starsLabel.text = "\(repository.stargazersCount) stars"
+        watchersLabel.text = "\(repository.wachersCount) watchers"
+        forksLabel.text = "\(repository.forksCount) forks"
+        issuesLabel.text = "\(repository.openIssuesCount) open issues"
         getOwnerIconImage()
     }
     
     func getOwnerIconImage() {
         let repository = searchRepositoryViewController.repositories[searchRepositoryViewController.currentIndex]
         
-        repositoryNameLabel.text = repository["full_name"] as? String
+        repositoryNameLabel.text = repository.fullName
         
-        if let owner = repository["owner"] as? [String: Any],
-           let avatarUrl = owner["avatar_url"] as? String,
-           let url = URL(string: avatarUrl) {
+        let owner = repository.owner
+        let avatarUrl = owner.avatarUrl
+        if let url = URL(string: avatarUrl) {
             URLSession.shared.dataTask(with: url) { (data, res, err) in
                 if let data = data, let ownerIcon = UIImage(data: data) {
                     DispatchQueue.main.async {
