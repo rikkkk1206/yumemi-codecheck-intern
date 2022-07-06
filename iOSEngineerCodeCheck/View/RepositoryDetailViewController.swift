@@ -20,6 +20,8 @@ class RepositoryDetailViewController: UIViewController {
     @IBOutlet weak var forksLabel: UILabel!
     @IBOutlet weak var issuesLabel: UILabel!
     
+    private let ownerViewModel = OwnerViewModel()
+    
     weak var searchRepositoryViewController: SearchRepositoryViewController!    // 循環参照を防ぐために弱参照する
         
     override func viewDidLoad() {
@@ -27,32 +29,23 @@ class RepositoryDetailViewController: UIViewController {
         
         let repository = searchRepositoryViewController.repositories[searchRepositoryViewController.currentIndex]
         
+        repositoryNameLabel.text = repository.fullName
         languageLabel.text = "Written in \(repository.language)"
         starsLabel.text = "\(repository.stargazersCount) stars"
         watchersLabel.text = "\(repository.wachersCount) watchers"
         forksLabel.text = "\(repository.forksCount) forks"
         issuesLabel.text = "\(repository.openIssuesCount) open issues"
-        getOwnerIconImage()
+        setOwnerIconImage(repository: repository)
     }
     
-    func getOwnerIconImage() {
-        let repository = searchRepositoryViewController.repositories[searchRepositoryViewController.currentIndex]
-        
-        repositoryNameLabel.text = repository.fullName
-        
+    func setOwnerIconImage(repository: Repository) {
         let owner = repository.owner
         let avatarUrl = owner.avatarUrl
         if let url = URL(string: avatarUrl) {
-            URLSession.shared.dataTask(with: url) { (data, res, err) in
-                if let data = data, let ownerIcon = UIImage(data: data) {
-                    DispatchQueue.main.async {
-                        self.ownerIconImageView.image = ownerIcon
-                    }
-                }
-                if let err = err {
-                    fatalError("ERROR create a task to retrieve the owner icon: \(err)")
-                }
-            }.resume()
+            ownerViewModel.fetchOwnerIconImage(url: url, completion: { ownerIconImage in
+                // 画像の取得を待ち合わせる
+                self.ownerIconImageView.image = ownerIconImage
+            })
         }
     }
 }

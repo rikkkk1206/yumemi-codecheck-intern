@@ -9,6 +9,7 @@
 import Foundation
 
 class SearchRepositoryViewModel {
+    // 値の変化を検知して適宜リロード処理を書く
     var repositories: [Repository] = [] {
         didSet {
             reloadHandler()
