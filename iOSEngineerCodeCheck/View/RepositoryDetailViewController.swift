@@ -27,6 +27,8 @@ class RepositoryDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        repositoryNameLabel.lineBreakMode = .byTruncatingTail
+        
         let repository = searchRepositoryViewController.repositories[searchRepositoryViewController.currentIndex]
         
         repositoryNameLabel.text = repository.fullName
