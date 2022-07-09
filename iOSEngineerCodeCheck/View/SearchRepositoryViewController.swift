@@ -43,6 +43,11 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
         }
     }
     
+    // MARK: Actions
+    @objc func tapFavoriteButton(_ sender: UIButton) {
+        
+    }
+    
     // MARK: SearchBar Delegate
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         return true
@@ -72,10 +77,14 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
+        let cellIdentifier = "SearchRepositoryTableViewCell"
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? SearchRepositoryTableViewCell else {
+            fatalError("The dequeued cell is not an instance of SearchRepositoryTableViewCell")
+        }
         let repository = repositories[indexPath.row]
-        cell.textLabel?.text = repository.fullName
-        cell.detailTextLabel?.text = repository.language
+        cell.repositoryTitleLabel.text = repository.fullName
+        cell.favoriteButton.tag = indexPath.row
+        cell.favoriteButton.addTarget(self, action: #selector(tapFavoriteButton(_:)), for: .touchUpInside)
         cell.tag = indexPath.row
         return cell
     }
