@@ -7,8 +7,10 @@
 //
 
 import Foundation
+import RealmSwift
 
 class Repository {
+    let id: Int
     let fullName: String
     let language: String
     let stargazersCount: Int
@@ -18,6 +20,7 @@ class Repository {
     let owner: Owner
     
     init() {
+        id = 0
         fullName = ""
         language = ""
         stargazersCount = 0
@@ -28,6 +31,7 @@ class Repository {
     }
     
     init(json: [String: Any]) {
+        id = json["id"] as? Int ?? 0
         fullName = json["full_name"] as? String ?? ""
         language = json["language"] as? String ?? ""
         stargazersCount = json["stargazers_count"] as? Int ?? 0

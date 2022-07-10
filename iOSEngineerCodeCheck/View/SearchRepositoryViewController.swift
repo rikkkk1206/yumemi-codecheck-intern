@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate {
     @IBOutlet weak var searchBar: UISearchBar!
@@ -45,7 +46,13 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
     
     // MARK: Actions
     @objc func tapFavoriteButton(_ sender: UIButton) {
-        
+        let repository = repositories[sender.tag]
+        if let favoriteRepository = FavoriteRepository.tryGetFavoriteRepository(repositoryId: repository.id) {
+            FavoriteRepository.updateFavorite(id: favoriteRepository._id)
+        } else {
+            FavoriteRepository.upsert(id: nil, favorite: true, repository: repository)
+        }
+        tableView.reloadData()
     }
     
     // MARK: SearchBar Delegate
@@ -83,6 +90,9 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
         }
         let repository = repositories[indexPath.row]
         cell.repositoryTitleLabel.text = repository.fullName
+        cell.favoriteButton.imageView?.image = FavoriteRepository.tryGetFavoriteRepository(repositoryId: repository.id) == nil
+            ? UIImage(systemName: "star")
+            : UIImage(systemName: "star.fill")
         cell.favoriteButton.tag = indexPath.row
         cell.favoriteButton.addTarget(self, action: #selector(tapFavoriteButton(_:)), for: .touchUpInside)
         cell.tag = indexPath.row
