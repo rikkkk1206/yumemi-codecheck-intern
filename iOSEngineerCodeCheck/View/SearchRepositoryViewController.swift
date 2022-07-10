@@ -11,6 +11,24 @@ import RealmSwift
 
 class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate {
     @IBOutlet weak var searchBar: UISearchBar!
+    @IBOutlet weak var menuBarButtonItem: UIBarButtonItem!
+    
+    private var selectedMenu = Menu.normal
+    
+    // メニュー表示ボタンを押した際に表示される項目
+    private enum Menu: CaseIterable {
+        case normal // 検索結果が全て表示される通常モード
+        case favoriteOnly   // お気に入りかつ検索結果に該当するリポジトリのみ表示するモード
+        
+        var title: String {
+            switch self {
+            case .normal:
+                return "全て"
+            case .favoriteOnly:
+                return "お気に入りのみ"
+            }
+        }
+    }
     
     private let searchRepositoryViewModel = SearchRepositoryViewModel()
     var repositories: [Repository] {
@@ -29,7 +47,9 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
         initViewModel()
     }
     
+    // リポジトリ詳細画面から戻った時にも行いたい処理を書く
     override func viewWillAppear(_ animated: Bool) {
+        configureMenu()
         tableView.reloadData()
     }
     
@@ -37,6 +57,22 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
         if segue.identifier == "Detail", let repositoryDetailViewController = segue.destination as? RepositoryDetailViewController {
             repositoryDetailViewController.repository = sender as? Repository
         }
+    }
+    
+    // 右上のメニュー表示ボタンの設定
+    private func configureMenu() {
+        let actions = Menu.allCases.compactMap { type in
+            UIAction(
+                title: type.title,
+                state: type == selectedMenu ? .on : .off,
+                handler: { _ in
+                    self.selectedMenu = type
+                    self.configureMenu()
+                    self.tableView.reloadData()
+                }
+            )
+        }
+        menuBarButtonItem.menu = UIMenu(title: "", options: .displayInline, children: actions)
     }
     
     // MARK: Init
@@ -55,7 +91,7 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
         } else {
             FavoriteRepository.upsert(id: nil, favorite: true, repository: repository)
         }
-        tableView.reloadRows(at: [IndexPath(row: sender.tag, section: 0)], with: .none)
+        tableView.reloadData()
     }
     
     // MARK: SearchBar Delegate
@@ -83,15 +119,21 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
     
     // MARK: TableView Delegate
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return repositories.count
+        // モードによって表示する数が変わる
+        return selectedMenu == .normal
+            ? repositories.count
+            : FavoriteRepository.filterFavoriteRepositories(repositories: repositories).count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellIdentifier = "SearchRepositoryTableViewCell"
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? SearchRepositoryTableViewCell else {
-            fatalError("The dequeued cell is not an instance of SearchRepositoryTableViewCell")
+            fatalError("ERROR The dequeued cell is not an instance of SearchRepositoryTableViewCell")
         }
-        let repository = repositories[indexPath.row]
+        // モードによって表示するリポジトリが変わる
+        let repository = selectedMenu == .normal
+            ? repositories[indexPath.row]
+            : FavoriteRepository.filterFavoriteRepositories(repositories: repositories)[indexPath.row]
         cell.repositoryTitleLabel.text = repository.fullName
         if let favoriteRepository = FavoriteRepository.tryGetFavoriteRepository(repositoryId: repository.id), favoriteRepository.favorite {
             cell.favoriteButton.setImage(UIImage(systemName: "star.fill"), for: UIControl.State())

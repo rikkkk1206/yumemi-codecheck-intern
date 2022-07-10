@@ -61,8 +61,11 @@
                             <outlet property="delegate" destination="MOh-CZ-3ki" id="A6Y-Dm-cjQ"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Search the GitHub Repository" id="ktq-eC-ZBq"/>
+                    <navigationItem key="navigationItem" title="Search the GitHub Repository" id="ktq-eC-ZBq">
+                        <barButtonItem key="rightBarButtonItem" image="list.bullet" catalog="system" id="KZ3-26-mMv"/>
+                    </navigationItem>
                     <connections>
+                        <outlet property="menuBarButtonItem" destination="KZ3-26-mMv" id="Pdx-v5-5Hb"/>
                         <outlet property="searchBar" destination="6rq-CD-Hob" id="3gq-mK-4M3"/>
                         <segue destination="AHY-RL-7mG" kind="show" identifier="Detail" id="qqd-8W-4W1"/>
                     </connections>
@@ -238,6 +241,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="list.bullet" catalog="system" width="128" height="88"/>
         <image name="star" catalog="system" width="128" height="116"/>
         <systemColor name="darkTextColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

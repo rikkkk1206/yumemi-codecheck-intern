@@ -69,4 +69,16 @@ class FavoriteRepository: Object {
         }
         return nil
     }
+    
+    // 検索結果のリポジトリからお気に入り登録済みのリポジトリのみを絞り込む
+    static func filterFavoriteRepositories(repositories: [Repository]) -> [Repository] {
+        let realm = try? Realm()
+        let favoriteRepositories = realm?.objects(FavoriteRepository.self)
+        guard let filteredRepositories = favoriteRepositories?.filter({$0.favorite}) else {
+            fatalError("ERROR filter favorite repositories")
+        }
+        return repositories.filter({ repository in
+            filteredRepositories.contains(where: { $0.repository_id == repository.id})
+        })
+    }
 }
