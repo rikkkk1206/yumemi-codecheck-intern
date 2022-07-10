@@ -32,7 +32,8 @@
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="94o-bx-R6K">
                                             <rect key="frame" x="0.0" y="6.5" width="47" height="31"/>
-                                            <state key="normal" title="Button"/>
+                                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                            <state key="normal" image="star" catalog="system"/>
                                             <buttonConfiguration key="configuration" style="plain" image="star" catalog="system"/>
                                         </button>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="user/repository" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VLO-7K-ygH">
@@ -156,6 +157,9 @@
                                         </constraints>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="star" catalog="system"/>
+                                        <connections>
+                                            <action selector="tapFavoriteButton:" destination="AHY-RL-7mG" eventType="touchUpInside" id="AHD-U8-Qay"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4q1-pG-WSB">
                                         <rect key="frame" x="47" y="0.0" width="46.5" height="47"/>
@@ -186,6 +190,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="J6o-vL-S1z"/>
                     <connections>
+                        <outlet property="favoriteButton" destination="JA5-2i-21P" id="y6X-jd-IwA"/>
                         <outlet property="forksLabel" destination="ZMv-4f-X2V" id="i84-sH-c5t"/>
                         <outlet property="issuesLabel" destination="dzg-K8-h2L" id="L0v-sy-cD4"/>
                         <outlet property="languageLabel" destination="s3M-QO-Kom" id="x3L-gZ-aZZ"/>

@@ -20,7 +20,6 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
     var searchingRepositoryTask: URLSessionTask?
     var searchWord: String = ""
     var searchUrlString: String = ""
-    var currentIndex: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,9 +29,13 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
         initViewModel()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        tableView.reloadData()
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "Detail", let repositoryDetailViewController = segue.destination as? RepositoryDetailViewController {
-            repositoryDetailViewController.searchRepositoryViewController = self
+            repositoryDetailViewController.repository = sender as? Repository
         }
     }
     
@@ -52,7 +55,7 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
         } else {
             FavoriteRepository.upsert(id: nil, favorite: true, repository: repository)
         }
-        tableView.reloadData()
+        tableView.reloadRows(at: [IndexPath(row: sender.tag, section: 0)], with: .none)
     }
     
     // MARK: SearchBar Delegate
@@ -90,9 +93,11 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
         }
         let repository = repositories[indexPath.row]
         cell.repositoryTitleLabel.text = repository.fullName
-        cell.favoriteButton.imageView?.image = FavoriteRepository.tryGetFavoriteRepository(repositoryId: repository.id) == nil
-            ? UIImage(systemName: "star")
-            : UIImage(systemName: "star.fill")
+        if let favoriteRepository = FavoriteRepository.tryGetFavoriteRepository(repositoryId: repository.id), favoriteRepository.favorite {
+            cell.favoriteButton.setImage(UIImage(systemName: "star.fill"), for: UIControl.State())
+        } else {
+            cell.favoriteButton.setImage(UIImage(systemName: "star"), for: UIControl.State())
+        }
         cell.favoriteButton.tag = indexPath.row
         cell.favoriteButton.addTarget(self, action: #selector(tapFavoriteButton(_:)), for: .touchUpInside)
         cell.tag = indexPath.row
@@ -100,7 +105,7 @@ class SearchRepositoryViewController: UITableViewController, UISearchBarDelegate
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        currentIndex = indexPath.row
-        performSegue(withIdentifier: "Detail", sender: self)
+        let repository = repositories[indexPath.row]
+        performSegue(withIdentifier: "Detail", sender: repository)
     }
 }
