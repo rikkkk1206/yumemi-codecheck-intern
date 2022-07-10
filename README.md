@@ -1,45 +1,27 @@
 # 株式会社ゆめみ iOS エンジニアコードチェック課題
 
-## 概要
+## 環境
+Cocoa pods：
+RealmSwift（最新バージョン）
+を使用。
+起動する際は以下の手順を踏んでください。
 
-本プロジェクトは株式会社ゆめみ（以下弊社）が、弊社に iOS エンジニアを希望する方に出す課題のベースプロジェクトです。本課題が与えられた方は、下記の概要を詳しく読んだ上で課題を取り組んでください。
+1. `pod install`実行
+2. finderを開き「iOSEngineerCodeCheck.xcworkspace」をダブルクリック
 
-## アプリ仕様
-
-本アプリは GitHub のリポジトリーを検索するアプリです。
-
-![動作イメージ](README_Images/app.gif)
-
-### 環境
-
-- IDE：基本最新の安定版（本概要更新時点では Xcode 13.0）
-- Swift：基本最新の安定版（本概要更新時点では Swift 5.5）
-- 開発ターゲット：基本最新の安定版（本概要更新時点では iOS 15.0）
-- サードパーティーライブラリーの利用：オープンソースのものに限り制限しない
-
-### 動作
-
-1. 何かしらのキーワードを入力
-2. GitHub API（`search/repositories`）でリポジトリーを検索し、結果一覧を概要（リポジトリ名）で表示
-3. 特定の結果を選択したら、該当リポジトリの詳細（リポジトリ名、オーナーアイコン、プロジェクト言語、Star 数、Watcher 数、Fork 数、Issue 数）を表示
-
-## 課題取り組み方法
-
-Issues を確認した上、本プロジェクトを [**Duplicate** してください](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/duplicating-a-repository)（Fork しないようにしてください。必要ならプライベートリポジトリーにしても大丈夫です）。今後のコミットは全てご自身のリポジトリーで行ってください。
-
-コードチェックの課題 Issue は全て [`課題`](https://github.com/yumemi/ios-engineer-codecheck/milestone/1) Milestone がついており、難易度に応じて Label が [`初級`](https://github.com/yumemi/ios-engineer-codecheck/issues?q=is%3Aopen+is%3Aissue+label%3A初級+milestone%3A課題)、[`中級`](https://github.com/yumemi/ios-engineer-codecheck/issues?q=is%3Aopen+is%3Aissue+label%3A中級+milestone%3A課題+) と [`ボーナス`](https://github.com/yumemi/ios-engineer-codecheck/issues?q=is%3Aopen+is%3Aissue+label%3Aボーナス+milestone%3A課題+) に分けられています。課題の必須／選択は下記の表とします：
-
-|   | 初級 | 中級 | ボーナス
-|--:|:--:|:--:|:--:|
-| 新卒／未経験者 | 必須 | 選択 | 選択 |
-| 中途／経験者 | 必須 | 必須 | 選択 |
-
-
-課題 Issueをご自身のリポジトリーにコピーするGitHub Actionsをご用意しております。  
-[こちらのWorkflow](./.github/workflows/copy-issues.yml)を[手動でトリガーする](https://docs.github.com/ja/actions/managing-workflow-runs/manually-running-a-workflow)ことでコピーできますのでご活用下さい。
-
-課題が完成したら、リポジトリーのアドレスを教えてください。
+## 対応した課題
+今回対応した課題は以下の通りです。
+- [ソースコードの可読性の向上](https://github.com/rikkkk1206/yumemi-codecheck-intern/issues/1#issue-1292528409)
+- [ソースコードの安全性の向上](https://github.com/rikkkk1206/yumemi-codecheck-intern/issues/2#issue-1292528579)
+- [バグを修正](https://github.com/rikkkk1206/yumemi-codecheck-intern/issues/3#issue-1292528741)
+- [アーキテクチャを適用](https://github.com/rikkkk1206/yumemi-codecheck-intern/issues/6#issue-1292529146)
+- [UI をブラッシュアップ](https://github.com/rikkkk1206/yumemi-codecheck-intern/issues/7#issue-1292529317)
+- [新機能を追加](https://github.com/rikkkk1206/yumemi-codecheck-intern/issues/8#issue-1292529485)
 
 ## 参考記事
 
-提出された課題の評価ポイントに関しては、[こちらの記事](https://qiita.com/lovee/items/d76c68341ec3e7beb611)に詳しく書かれてありますので、ぜひご覧ください。
+実装にあたり以下の記事を参考にしました
+
+- [【swift3入門】ViewModelを作成しよう](https://fukatsu.tech/create-viewmodel)
+- [iOS 15でNavigationBarとTabBarがデフォルトで透過される](https://blog.personal-factory.com/2021/12/29/ios15-transparent-navigationbar-and-tabbar-by-default/)
+- [Swift: メニューポップアップで選択操作ができる、UIMenuの導入](https://www.fuwamaki.com/article/335)
